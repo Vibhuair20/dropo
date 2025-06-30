@@ -8,7 +8,7 @@ export async function POST(request:NextRequest) {
         const{userId} = await auth()
              if(!userId){
                 return NextResponse.json({error: "Unauthorized"},
-                    {status: 401})
+                    {status: 401});
              }
          //parse body request
      const body = await requestAnimationFrame.json()
