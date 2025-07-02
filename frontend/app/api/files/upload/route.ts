@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { filesRelations } from "@/lib/db/schema";
+import { files, filesRelations } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import {and, eq} from "drizzle-orm"
 import ImageKit from "imagekit";
@@ -44,12 +44,12 @@ export async function POST(request: NextResponse){
         if(parentId){ // 1. ensure that it exists 2.belongs to user 3. it should ne folder
             const [parentFolder] = await db
                 .select()
-                .from(filesRelations)
+                .from(files)
                 .where(
                     and(
-                        eq(filesRelations.id, parentId)
-                        eq(filesRelations.userId, parentId),
-                        eq(filesRelations.isFolder, true)
+                        eq(files.id, parentId),
+                        eq(files.userId, parentId),
+                        eq(files.isFolder, true)
 
                     )
                 )
@@ -101,7 +101,7 @@ export async function POST(request: NextResponse){
         isTrash: false
        }
 
-       const [newFile] = await db.insert(filesRelations).values(fileData).returning()
+       const [newFile] = await db.insert(files).values(fileData).returning()
 
        return NextResponse.json(
         newFile

@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { filesRelations } from "@/lib/db/schema";
+import { files, filesRelations } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { v4 as uuidv4 } from "uuid";
 import { eq, and, isNull } from "drizzle-orm"
@@ -31,21 +31,21 @@ export async function GET(request:NextRequest) {
             // fetching from a specific order
              userFiles = await db
                 .select()
-                .from(filesRelations)
+                .from(files)
                 .where(
                     and(
-                        eq(filesRelations.userId, userId),
-                        eq(filesRelations.parentId, parentId)
+                        eq(files.userId, userId),
+                        eq(files.parentId, parentId)
                     )
                 )
         }else{ // if we don't have the parent id
             userFiles = await db
                 .select()
-                .from(filesRelations)
+                .from(files)
                 .where(
                     and(
-                        eq(filesRelations.userId, userId),
-                        isNull(filesRelations.parentId)
+                        eq(files.userId, userId),
+                        isNull(files.parentId)
                     )
                 )
         }

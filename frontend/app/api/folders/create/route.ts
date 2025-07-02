@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { filesRelations } from "@/lib/db/schema";
+import { files, filesRelations } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import {v4 as uuidv4} from"uuid"
 import {eq, and} from "drizzle-orm"
@@ -31,12 +31,12 @@ export async function POST(request:NextRequest) {
         if(parentId){
             const [parentFolder] = await db
                 .select()
-                .from(filesRelations)
+                .from(files)
                 .where(
                     and(
-                        eq(filesRelations.id, parentId),
-                        eq(filesRelations.userId, userId),
-                        eq(filesRelations.isFolder, true)
+                        eq(files.id, parentId),
+                        eq(files.userId, userId),
+                        eq(files.isFolder, true)
                     )
                 )
                 if(!parentFolder){
@@ -48,7 +48,7 @@ export async function POST(request:NextRequest) {
         }
 
         // if all those exits then create a folder in database
-        const folderDate = {
+        const folderData = {
             id: uuidv4(),
             name: name.trim(),
             // to only disply in the frontend
@@ -65,7 +65,7 @@ export async function POST(request:NextRequest) {
             isTrash: false,
         };
 
-        const [newFolder] = await db.insert(filesRelations).values(folderData).returning()
+        const [newFolder] = await db.insert(files).values(folderData).returning()
 
         return NextResponse.json({
             success: true,
@@ -74,6 +74,10 @@ export async function POST(request:NextRequest) {
         })
 
     } catch (error) {
-        
+        console.error("Error creating folder:", error);
+        return NextResponse.json(
+            { error: "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }
