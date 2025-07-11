@@ -1,8 +1,10 @@
 import { auth, clerkMiddleware } from '@clerk/nextjs/server'
 import { X } from 'lucide-react';
 import { NextResponse } from 'next/server';
+import { createRouteMatcher } from "@clerk/nextjs/server";
+import { IKContext as ImageKitProvider } from "imagekitio-react";
 
-const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*", "/sign-up(."])
+const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"])
 
 export default clerkMiddleware(async(auth, request) => {{
     const user = auth()

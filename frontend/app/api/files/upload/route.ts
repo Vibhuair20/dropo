@@ -41,23 +41,24 @@ export async function POST(request: NextResponse){
         }
 
         // check with the parent id
-        if(parentId){ // 1. ensure that it exists 2.belongs to user 3. it should ne folder
+        if(parentId){ // 1. ensure that it exists 2.belongs to user 3. it should be folder
             const [parentFolder] = await db
                 .select()
                 .from(files)
                 .where(
                     and(
                         eq(files.id, parentId),
-                        eq(files.userId, parentId),
+                        eq(files.userId, userId), // Fixed: was parentId, should be userId
                         eq(files.isFolder, true)
-
                     )
                 )
-        }else{
-            return NextResponse.json({error: "no parent folder found"},
-                {status: 401}
-            );
+            
+            if(!parentFolder){
+                return NextResponse.json({error: "parent folder not found or not accessible"},
+                    {status: 401});
+            }
         }
+        // Allow root-level uploads (no parentId check needed)
 
         // check if the file is image or pdf
         if(!file.type.startsWith("image/") && file.type !== "application/pdf"){
@@ -69,7 +70,7 @@ export async function POST(request: NextResponse){
 
         // convert file into buffer
        const buffer =  await file.arrayBuffer()
-       const fileBuffer =  buffer.from(buffer)
+       const fileBuffer =  Buffer.from(buffer)
 
        const folderPath = parentId ? `/dopo/${userId}/folder/${parentId}` : `dropo/${userId}`
 
@@ -90,27 +91,28 @@ export async function POST(request: NextResponse){
        const fileData = {
         name: originalFileName,
         path: uploadResponse.filePath,
-        size: file.size,
+        size: file.size.toString(),
         type: file.type,
-        fileUrl: uploadResponse.url,
-        thumbnailUrl: uploadResponse.thumbnailUrl || null,
+        fileURL: uploadResponse.url,
+        thumbnailURL: uploadResponse.thumbnailUrl || "",
         userId: userId,
-        parentId: parentId,
+        parentId: parentId || "", // Ensure parentId is always a string
         isFolder: false,
         isStarred: false,
         isTrash: false
        }
 
-       const [newFile] = await db.insert(files).values(fileData).returning()
+       const [newFile] = await db.insert(files).values(fileData).returning();
 
        return NextResponse.json(
         newFile
        )
 
     }catch(error){
+        console.error("Upload error:", error);
         return NextResponse.json(
-            {error: "filed to upload file"},
-            {status: 401}
+            {error: "failed to upload file", details: error instanceof Error ? error.message : String(error)},
+            {status: 500}
         );
     }
 }

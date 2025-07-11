@@ -11,6 +11,8 @@ import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Card, CardBody, CardHeader, CardFooter } from "@heroui/card";
 import { Divider } from "@heroui/divider";
+import { signUpSchema } from "@/schema/signupSchema";
+import { Mail, Lock, AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react";
 
 export default function SignUpForm(){
     const router = useRouter()
@@ -258,6 +260,7 @@ export default function SignUpForm(){
                 size="sm"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 type="button"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
                 {showConfirmPassword ? (
                   <EyeOff className="h-4 w-4 text-default-500" />

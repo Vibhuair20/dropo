@@ -57,9 +57,9 @@ export async function DELETE(
                             limit: 1,
                         });
 
-                        if(searchResult && searchResult.length > 0){
+                        if (searchResult && searchResult.length > 0 && "fileId" in searchResult[0]) {
                             await imagekit.deleteFile(searchResult[0].fileId);
-                        }else{
+                        } else {
                             await imagekit.deleteFile(imageKitfeild);
                         }
 

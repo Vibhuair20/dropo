@@ -53,13 +53,13 @@ export async function POST(request:NextRequest) {
             name: name.trim(),
             // to only disply in the frontend
             path: `/folder/${userId}/${uuidv4()}`,
-            size: 0,
+            size: "0",
             type: "folder",
             // all the files will come from here
             fileURL: "",
             thumbnailURL: "",
             userId,
-            parentId,
+            parentId: parentId || "",
             isFolder: true,
             isStarred: false,
             isTrash: false,

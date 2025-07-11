@@ -1,4 +1,4 @@
-"use-client"
+"use client"
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -122,6 +122,7 @@ export default function SignInForm() {
                     size="sm"
                     onClick={() => setShowPassword(!showPassword)}
                     type="button"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                     {showPassword ? (
                     <EyeOff className="h-4 w-4 text-default-500" />

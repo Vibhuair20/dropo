@@ -28,7 +28,7 @@ export async function GET(request:NextRequest) {
         // fetch files from database
         let userFiles;
         if(parentId){
-            // fetching from a specific order
+            // fetching from a specific folder
              userFiles = await db
                 .select()
                 .from(files)
@@ -38,21 +38,23 @@ export async function GET(request:NextRequest) {
                         eq(files.parentId, parentId)
                     )
                 )
-        }else{ // if we don't have the parent id
+        }else{ // if we don't have the parent id, fetch root level files
             userFiles = await db
                 .select()
                 .from(files)
                 .where(
                     and(
                         eq(files.userId, userId),
-                        isNull(files.parentId)
+                        eq(files.parentId, "") // Root level files have empty string as parentId
                     )
                 )
         }
 
+        console.log(`Fetched ${userFiles.length} files for user ${userId}, parentId: ${parentId || 'root'}`);
         return NextResponse.json(userFiles)
 
     } catch (error) {
+        console.error("Error fetching files:", error);
         return NextResponse.json(
                 {error: "Unable to catch the files"},
                 {status: 500}

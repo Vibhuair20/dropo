@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { filesRelations } from "@/lib/db/schema";
+import { files, filesRelations } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +11,7 @@ export async function POST(request:NextRequest) {
                     {status: 401});
              }
          //parse body request
-     const body = await requestAnimationFrame.json()
+     const body = await request.json()
      const {imagekit, userId: bodyUserId} = body
 
      //it means some one else is trying to access the database but not the user
@@ -32,18 +32,18 @@ export async function POST(request:NextRequest) {
      const fileData = {
         name: imagekit.name || "untitled",
         path: imagekit.filePath || `/dropo/${userId}/${imagekit.name}`,
-        size: imagekit.size || 0,
+        size: (imagekit.size ? imagekit.size.toString() : "0"),
         type: imagekit.fileType || "image",
-        fileUrl: imagekit.url,
-        thumbnailURL: imagekit.thumbnailURL || null,
+        fileURL: imagekit.url,
+        thumbnailURL: imagekit.thumbnailURL || "",
         userId: userId,
-        parentId: null, //root level by default
+        parentId: "", // root level by default
         isFolder: false,
         isStarred: false,
         isTrash: false,
      };
 
-     const [newFile] = await db.insert(fileData).values(fileData).returning()
+     const [newFile] = await db.insert(files).values(fileData).returning()
      return NextResponse.json(newFile)
 
     }catch(error){

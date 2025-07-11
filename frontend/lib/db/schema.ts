@@ -2,7 +2,7 @@ import {pgTable, boolean, uuid, text, char, date, timestamp} from "drizzle-orm/p
 import { relations } from "drizzle-orm" 
 import { time } from "drizzle-orm/mysql-core"
 
-export const files = pgTable("users", {
+export const files = pgTable("files", {
     id : uuid().defaultRandom().primaryKey(),
 
     // basic file.folder information
