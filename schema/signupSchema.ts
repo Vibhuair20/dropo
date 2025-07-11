@@ -2,6 +2,10 @@ import * as z from "zod";
 
 export const signUpSchema = z
     .object({
+        username: z
+            .string()
+            .trim()
+            .min(8, {message: "least 8 for username"}),
         email: z
             .string()
             .trim()
