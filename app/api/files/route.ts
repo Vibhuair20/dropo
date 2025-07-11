@@ -1,8 +1,7 @@
 import { db } from "@/lib/db";
-import { files, filesRelations } from "@/lib/db/schema";
+import { files } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { v4 as uuidv4 } from "uuid";
-import { eq, and, isNull } from "drizzle-orm"
+import { eq, and } from "drizzle-orm"
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest) {

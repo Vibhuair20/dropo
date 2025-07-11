@@ -228,7 +228,7 @@ export default function FileList({
   const handleDownloadFile = async (file: FileType) => {
     try {
       // Show loading toast
-      const loadingToastId = addToast({
+      addToast({
         title: "Preparing Download",
         description: `Getting "${file.name}" ready for download...`,
         color: "primary",

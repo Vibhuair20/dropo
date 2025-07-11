@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { files, filesRelations } from "@/lib/db/schema";
+import { files } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import {and, eq} from "drizzle-orm"
 import ImageKit from "imagekit";

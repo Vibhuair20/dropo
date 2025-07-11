@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { files, filesRelations } from "@/lib/db/schema";
+import { files } from "@/lib/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -47,7 +47,7 @@ export async function POST(request:NextRequest) {
      return NextResponse.json(newFile)
 
     }catch(error){
+        console.error("Upload error:", error);
         return NextResponse.json({error: "failed to generate authentication param"}, {status: 500});
-
     }
 }

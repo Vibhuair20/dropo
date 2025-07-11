@@ -20,6 +20,7 @@ export async function GET(){
  
      return NextResponse.json(authParams)
    } catch (error: any) {
+        console.error("ImageKit auth error:", error);
         return NextResponse.json({error: "failed to generate authentication param"}, {status: 500});
    }
 };
